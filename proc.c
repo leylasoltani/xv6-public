@@ -322,7 +322,7 @@ waitx(int *wtime, int *rtime)
     
     havekids = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->parent != proc)
+      if(p->parent != myproc())
         continue;
       havekids = 1;
       if(p->state == ZOMBIE){
@@ -346,13 +346,13 @@ waitx(int *wtime, int *rtime)
     }
 
     
-    if(!havekids || proc->killed){
+    if(!havekids || myproc()->killed){
       release(&ptable.lock);
       return -1;
     }
 
     
-    sleep(proc, &ptable.lock);
+    sleep(myproc(), &ptable.lock);
   }
 }
 
