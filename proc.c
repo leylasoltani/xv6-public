@@ -400,7 +400,10 @@ scheduler(void)
     sti();
 
     // Loop over process table looking for process to run.
+    
+    //struct proc *max_priority = NULL;
     acquire(&ptable.lock);
+    
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
@@ -601,3 +604,39 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int
+cps()
+{
+  
+  sti();
+  struct proc *p;
+  
+  
+  acquire(&ptable.lock);
+  
+  
+  
+  
+  cprintf("name \t pid \t priority \t state \t\n");
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+	
+	if (p->state == RUNNING){
+		
+		cprintf("%s \t %d \t %d \t\t RUNNING  \n \n ", p->name, p->pid, p->priority);
+	}
+	else if(p->state == RUNNABLE){
+		cprintf("%s \t %d \t %d \t\t RUNNABLE \n \n ", p->name, p->pid, p->priority);
+	}
+	else if(p->state == SLEEPING){
+		cprintf("%s \t %d \t %d \t\t SlEEPING \n \n ", p->name, p->pid, p->priority);
+	}
+  }
+  release(&ptable.lock);
+  return 22;
+}
+
+
+
+
